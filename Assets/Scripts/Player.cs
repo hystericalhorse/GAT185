@@ -19,9 +19,9 @@ public class Player : MonoBehaviour
     float yaw = 0f;
     float roll = 0f;
 
-    float _pitch = 0f;
-    float _yaw = 0f;
-    float _roll = 0f;
+    public float _pitch = 0f;
+    public float _yaw = 0f;
+    public float _roll = 0f;
 
     float max_roll = 45f;
     float roll_factor = 20f;
@@ -65,11 +65,18 @@ public class Player : MonoBehaviour
         //pitch = Input.GetAxis("Mouse Y");
 
         yaw = Input.GetAxis("Horizontal");
+        if (yaw != 0)
+        {
+            //yaw = ((yaw > 0) ? -transform.right : transform.right).normalized;
+        }
+
         //yaw = Input.GetAxis("Mouse X");
         roll = Mathf.Clamp(-yaw * roll_factor, -max_roll, max_roll);
 
         pitch *= rot_speed * Time.deltaTime;
         _pitch += pitch;
+
+        _pitch = _pitch % 360;
 
         if (Input.GetKey(KeyCode.C))
         {
@@ -77,7 +84,9 @@ public class Player : MonoBehaviour
         }
 
         yaw *= rot_speed * Time.deltaTime;
-        _yaw += yaw;
+        //_yaw -= yaw;
+        _yaw += (_pitch <= 90 || _pitch >= 270) ? yaw : -yaw;
+        //_yaw += (_pitch >= 180 && _pitch >= -180) ? yaw : -yaw;
 
         //roll *= rot_speed * Time.deltaTime;
         _roll += roll;
