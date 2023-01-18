@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
 {
     float speed = 0.0f;
     [Range(0, 500), Tooltip("Max Player Speed")] public float max_speed = 0.0f;
-    [Range(0, 360), Tooltip("Rotation Speed")] public float rot_speed = 180.0f;
+    [Range(0, 360), Tooltip("Yaw Speed")] public float yaw_speed = 180.0f;
+    [Range(0, 360), Tooltip("Pitch Speed")] public float pitch_speed = 90.0f;
 
     public Transform bullet_origin;
 	public GameObject prefab;
@@ -73,23 +74,26 @@ public class Player : MonoBehaviour
         //yaw = Input.GetAxis("Mouse X");
         roll = Mathf.Clamp(-yaw * roll_factor, -max_roll, max_roll);
 
-        pitch *= rot_speed * Time.deltaTime;
+        pitch *= pitch_speed * Time.deltaTime;
         _pitch += pitch;
 
         _pitch = _pitch % 360;
 
         if (Input.GetKey(KeyCode.C))
         {
-
+            _pitch = 0;
+            Vector3 v = new Vector3(transform.position.x, 0, transform.position.z);
+            transform.position = v;
         }
 
-        yaw *= rot_speed * Time.deltaTime;
+        yaw *= yaw_speed * Time.deltaTime;
         //_yaw -= yaw;
         _yaw += (_pitch <= 90 || _pitch >= 270) ? yaw : -yaw;
         //_yaw += (_pitch >= 180 && _pitch >= -180) ? yaw : -yaw;
 
         //roll *= rot_speed * Time.deltaTime;
         _roll += roll;
+        _roll = _roll % 360;
 
         Quaternion rotation = Quaternion.Euler(_pitch, _yaw, roll);
         transform.rotation = rotation;
